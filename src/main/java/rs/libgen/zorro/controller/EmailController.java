@@ -1,11 +1,7 @@
 package rs.libgen.zorro.controller;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rs.libgen.zorro.model.EmailDetails;
 import rs.libgen.zorro.service.EmailService;
 import rs.libgen.zorro.service.SearchService;

@@ -1,6 +1,7 @@
 package rs.libgen.zorro.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -12,7 +13,6 @@ import rs.libgen.zorro.model.EmailDetails;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -29,6 +29,7 @@ public class EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
         log.info(details.toString());
+        File file=null;
         try {
             mimeMessageHelper
                     = new MimeMessageHelper(mimeMessage, true);
@@ -37,18 +38,20 @@ public class EmailService {
             mimeMessageHelper.setText(details.getMsgBody());
             mimeMessageHelper.setSubject(
                     details.getSubject());
-            File file = new File(details.getAttachment());
+            file = new File(details.getAttachment());
             FileSystemResource fileSystemResource = new FileSystemResource(file);
-
-            mimeMessageHelper.addAttachment(
-                    Objects.requireNonNull(fileSystemResource.getFilename()), fileSystemResource);
+            String fName=StringUtils.capitalize(details.getBookName());
+            fName=fName.replaceAll("\\s","");
+            mimeMessageHelper.addAttachment(fName+".pdf", fileSystemResource);
             javaMailSender.send(mimeMessage);
-            if (file.delete()) {
-                log.info("temp file deleted successfully in local storage");
-            }
             return "Mail sent Successfully";
         } catch (MessagingException e) {
             return "Error while sending mail!!!";
+        }
+        finally {
+            if (file!=null && file.delete()) {
+                log.info("temp file deleted successfully in local storage");
+            }
         }
     }
 }

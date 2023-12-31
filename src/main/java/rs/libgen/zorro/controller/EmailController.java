@@ -28,14 +28,14 @@ public class EmailController {
     }
 
     @PostMapping("/send-to-kindle")
-    public String sendToKindle(@RequestHeader Long deviceId, @RequestHeader String resLink) throws IOException {
+    public String sendToKindle(@RequestHeader Long deviceId, @RequestHeader String resLink,@RequestHeader String bookName) throws IOException {
         KindleDevice kindleDevice = kindleDeviceRepository.findByDeviceId(deviceId);
-        System.err.println(kindleDevice.toString());
         String dLink = searchService.resolveGetLinkMirror1(resLink);
         String uniqFileName = searchService.downloadFileFromLink(dLink);
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(kindleDevice.getKindleEmail());
         emailDetails.setAttachment(uniqFileName);
+        emailDetails.setBookName(bookName);
         return emailService.sendMailWithAttachment(emailDetails);
     }
 

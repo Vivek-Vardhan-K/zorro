@@ -19,4 +19,7 @@ public class KindleDevice {
     @Column(name = "ACCOUNT_ID")
     private Long accountId;
 
+    @Column(name = "DEVICE_TYPE")
+    private Short deviceType;
+
 }
